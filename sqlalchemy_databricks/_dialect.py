@@ -21,10 +21,17 @@ class DatabricksDialect(HiveDialect):
         # server_hostname, access_token, and http_path.
         # schema is extracted from the database in the url
         # http_path is passed as a connect arg outside this method
+        catalog_schema = url.database.split('.')
+        catalog = catalog_schema[0]
+        if len(catalog_schema) == 2:
+            schema = catalog_schema[1]
+        else:
+            schema = "default"
         kwargs = {
             "server_hostname": url.host,
             "access_token": url.password,
-            "schema": url.database or "default",
+            "catalog": catalog,
+            "schema": schema,
         }
         return [], kwargs
 
